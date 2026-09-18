@@ -36,6 +36,7 @@ class Device:
         self.name: str | None = None
         self.device_id: str | None = None
 
+        self.active_schedule_id: int | None = None
         self.active_schedule: str | None = None
         self.available_schedules: list[str] = []
 
@@ -57,6 +58,7 @@ class Device:
         """Update device attributes."""
         self.name = data.get("Name")
         self.device_id = data.get("DeviceId")
+        self.active_schedule = data.get("TemperatureSchedule")
 
         state_data: dict[str, Any] = data.get("State", {})
         self._update_state_attributes(state_data)
@@ -90,9 +92,6 @@ class Device:
     def _update_schedules(self, schedules_data: list[dict[str, Any]]) -> None:
         """Update device schedules based on the provided data."""
         self.available_schedules = [schedule["Name"] for schedule in schedules_data]
-        for schedule in schedules_data:
-            if schedule["Active"]:
-                self.active_schedule = schedule["Name"]
 
     def _update_state_attributes(self, state_data: dict[str, Any]) -> None:
         """Update device state attributes."""
